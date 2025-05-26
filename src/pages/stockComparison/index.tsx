@@ -57,7 +57,7 @@ export default function Home() {
       formData.append('oldFile', oldFile);
       formData.append('newFile', newFile);
 
-      const response = await axios.post('http://localhost:8000/api/compare-stocks', formData, {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/compare-stocks`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

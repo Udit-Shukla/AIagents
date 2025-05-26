@@ -44,7 +44,7 @@ const InsightChat: React.FC<InsightChatProps> = ({ summary, changed, added, remo
           removedCount: removed.length
         });
 
-        const res = await axios.post("http://localhost:8000/api/generate-insights", {
+        const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/generate-insights`, {
           summary,
           changed,
           added,
