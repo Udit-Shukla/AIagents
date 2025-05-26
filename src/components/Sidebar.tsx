@@ -1,5 +1,6 @@
 import React from 'react'
 import { useRouter } from 'next/router'
+import Link from 'next/link'
 
 const Sidebar = () => {
   const router = useRouter()
@@ -10,19 +11,19 @@ const Sidebar = () => {
         <nav>
           <ul className="space-y-4 ">
             <li>
-              <a href="/stockComparison" className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors duration-200">
+              <Link href="/stockComparison" className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors duration-200">
                 <span className="ml-2">Stock Comparison</span>
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="/contractComparison" className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors duration-200">
+              <Link href="/contractComparison" className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors duration-200">
                 <span className="ml-2">Contract Comparison</span>
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="/ndaCreation" className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors duration-200">
+              <Link href="/ndaCreation" className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors duration-200">
                 <span className="ml-2">NDA Creation</span>
-              </a>
+              </Link>
             </li>
           </ul>
         </nav>
