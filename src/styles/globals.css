@@ -1,0 +1,142 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Theme Variables */
+:root {
+  --primary: #2563eb;              /* Tailwind blue-600 */
+  --primary-hover: #1d4ed8;        /* Tailwind blue-700 */
+  --secondary: #10b981;            /* Tailwind emerald-500 */
+  --secondary-hover: #059669;      /* Tailwind emerald-600 */
+  --danger: #ef4444;               /* Tailwind red-500 */
+  --text-dark: #1f2937;            /* Tailwind gray-800 */
+  --text-muted: #6b7280;           /* Tailwind gray-500 */
+  --text-light: #f9fafb;           /* Tailwind gray-50 */
+  --bg: #f3f4f6;                   /* Tailwind gray-100 */
+  --bg-card: #ffffff;              /* White */
+  --border: #e5e7eb;               /* Tailwind gray-200 */
+}
+
+/* Typography and base */
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--bg);
+  color: var(--text-dark);
+  @apply transition-all duration-300 ease-in-out antialiased;
+}
+
+h1, h2, h3, h4, h5 {
+  color: var(--text-dark);
+  font-weight: 600;
+}
+
+a {
+  color: var(--primary);
+  text-decoration: none;
+}
+a:hover {
+  color: var(--primary-hover);
+}
+
+/* Utility Animations */
+.fade-in {
+  @apply opacity-0 animate-fade-in;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card {
+  @apply bg-white rounded shadow p-6;
+  background-color: var(--bg-card);
+  color: var(--text-dark);
+  transition: background-color 0.3s ease;
+}
+
+.btn {
+  @apply px-4 py-2 text-sm font-medium rounded transition-colors duration-200;
+}
+.btn-primary {
+  background-color: var(--primary);
+  color: white;
+}
+.btn-primary:hover {
+  background-color: var(--primary-hover);
+}
+.btn-secondary {
+  background-color: var(--secondary);
+  color: white;
+}
+.btn-secondary:hover {
+  background-color: var(--secondary-hover);
+}
+.btn-outline {
+  border: 1px solid var(--primary);
+  color: var(--primary);
+  background: transparent;
+}
+.btn-outline:hover {
+  background-color: var(--primary);
+  color: white;
+}
+
+.text-muted {
+  color: var(--text-muted);
+}
+
+.bg-muted {
+  background-color: var(--bg);
+}
+
+/* Chart Colors (optional custom palette) */
+.bar-up {
+  fill: var(--secondary);
+}
+.bar-down {
+  fill: var(--danger);
+}
+.prose h2 {
+  font-size: 1.25rem;
+  color: var(--text-dark);
+}
+
+.prose ul {
+  padding-left: 1.25rem;
+  list-style-type: disc;
+}
+
+.prose li {
+  margin-bottom: 0.4rem;
+}
+
+.prose span[style*="color:green"] {
+  font-weight: 500;
+}
+
+.prose span[style*="color:red"] {
+  font-weight: 500;
+}
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.5s ease-out both;
+}
