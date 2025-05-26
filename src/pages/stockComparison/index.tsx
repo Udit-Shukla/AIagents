@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { API_URL } from '@/config';
 import FileUploader from '@/components/stockComparison/FileUploader';
 import SummaryBlock from '@/components/stockComparison/SummaryBlock';
 import TableChanged from '@/components/stockComparison/tableChanged';
@@ -57,7 +58,9 @@ export default function Home() {
       formData.append('oldFile', oldFile);
       formData.append('newFile', newFile);
 
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/compare-stocks`, formData, {
+      console.log('API URL:', API_URL);
+
+      const response = await axios.post(`${API_URL}/api/compare-stocks`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

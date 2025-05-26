@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios, { AxiosError } from 'axios';
+import { API_URL } from '@/config';
 
 interface InsightChatProps {
   summary: {
@@ -44,7 +45,7 @@ const InsightChat: React.FC<InsightChatProps> = ({ summary, changed, added, remo
           removedCount: removed.length
         });
 
-        const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/generate-insights`, {
+        const res = await axios.post(`${API_URL}/api/generate-insights`, {
           summary,
           changed,
           added,
