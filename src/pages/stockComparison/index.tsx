@@ -44,6 +44,7 @@ export default function Home() {
   const [shouldRefetchInsights, setShouldRefetchInsights] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [resetKey, setResetKey] = useState(0);
+  const [insightHtml, setInsightHtml] = useState<string | null>(null);
 
   const handleCompare = async () => {
     if (!oldFile || !newFile) {
@@ -159,6 +160,7 @@ export default function Home() {
                     added={result.added}
                     removed={result.removed}
                     shouldRefetch={shouldRefetchInsights}
+                    setInsightHtml={setInsightHtml}
                   />
                 </div>
               </div>
@@ -174,7 +176,7 @@ export default function Home() {
           added={result.added}
           removed={result.removed}
           resetKey={resetKey}
-          insightHtml={null}
+          insightHtml={insightHtml}
         />
       )}
     </div>

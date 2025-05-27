@@ -23,9 +23,10 @@ interface InsightChatProps {
   }>;
   removed: string[];
   shouldRefetch: boolean;
+  setInsightHtml: (html: string | null) => void;
 }
 
-const InsightChat: React.FC<InsightChatProps> = ({ summary, changed, added, removed, shouldRefetch }) => {
+const InsightChat: React.FC<InsightChatProps> = ({ summary, changed, added, removed, shouldRefetch, setInsightHtml }) => {
   const [insight, setInsight] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -66,6 +67,7 @@ const InsightChat: React.FC<InsightChatProps> = ({ summary, changed, added, remo
           .replace(/(\$[\d,.]+)/g, `<span class="font-bold text-blue-700">$1</span>`);
 
         setInsight(html);
+        setInsightHtml(html);
       } catch (err: unknown) {
         const error = err as AxiosError<{ error: string }>;
         console.error("Insight fetch failed:", {
@@ -75,13 +77,14 @@ const InsightChat: React.FC<InsightChatProps> = ({ summary, changed, added, remo
         });
         setError(error.response?.data?.error || error.message || "Failed to generate insight");
         setInsight(null);
+        setInsightHtml(null);
       } finally {
         setLoading(false);
       }
     };
 
     fetchInsight();
-  }, [summary, changed, added, removed, shouldRefetch, insight]);
+  }, [summary, changed, added, removed, shouldRefetch, insight, setInsightHtml]);
 
   return (
     <div className="fade-in animate-slide-up">
