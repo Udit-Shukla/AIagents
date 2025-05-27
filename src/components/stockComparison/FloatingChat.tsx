@@ -51,7 +51,7 @@ const FloatingChat: React.FC<FloatingChatProps> = ({
     setLoading(true);
     setError(null);
     try {
-      const res = await axios.post(`${API_URL}/api/chats`, {
+      const res = await axios.post(`${API_URL}/api/chat`, {
         question,
         insight: insightHtml,
         dataSummary: { summary, changed, added, removed },
