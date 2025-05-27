@@ -5,7 +5,7 @@ import Link from 'next/link'
 const Sidebar = () => {
   const router = useRouter()
   return (
-    <div className="w-64 h-screen bg-white border-r border-gray-200 shadow-sm">
+    <div className=" h-screen bg-white border-r border-gray-200 shadow-sm">
       <div className="py-6 px-4">
         <h1 className="text-2xl font-bold text-gray-800 mb-8 cursor-pointer" onClick={() => router.push('/')}>PriceAgent</h1>
         <nav>
