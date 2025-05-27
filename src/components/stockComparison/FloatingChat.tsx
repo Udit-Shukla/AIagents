@@ -58,8 +58,14 @@ const FloatingChat: React.FC<FloatingChatProps> = ({
       });
       setChatHistory(prev => [...prev, { question, answer: res.data.answer }]);
       setQuestion('');
-    } catch (err:any) {
-      setError(err.response?.data?.error || err.message || 'Failed to get answer');
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        setError(err.response?.data?.error || err.message || 'Failed to get answer');
+      } else if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('Failed to get answer');
+      }
     } finally {
       setLoading(false);
     }
