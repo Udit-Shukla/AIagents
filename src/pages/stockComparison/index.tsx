@@ -11,7 +11,6 @@ import ChangePieChart from '@/components/charts/ChangepieChart';
 import StackedPriceBar from '@/components/charts/StackedPriceBar';
 import InsightChat from '@/components/stockComparison/InsightChat';
 import Sidebar from '@/components/Sidebar';
-import FloatingChat from '@/components/stockComparison/FloatingChat';
 
 interface ComparisonResult {
   summary: {
@@ -45,6 +44,12 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [resetKey, setResetKey] = useState(0);
   const [insightHtml, setInsightHtml] = useState<string | null>(null);
+  
+  // Chat state
+  const [question, setQuestion] = useState('');
+  const [chatHistory, setChatHistory] = useState<{ question: string; answer: string }[]>([]);
+  const [chatLoading, setChatLoading] = useState(false);
+  const [chatError, setChatError] = useState<string | null>(null);
 
   const handleCompare = async () => {
     if (!oldFile || !newFile) {
@@ -78,6 +83,38 @@ export default function Home() {
       setLoading(false);
     }
   };
+
+  const handleAsk = async () => {
+    if (!question.trim()) return;
+    setChatLoading(true);
+    setChatError(null);
+    try {
+      const res = await axios.post(`${API_URL}/api/chat`, {
+        question,
+        insight: insightHtml,
+        dataSummary: { summary: result?.summary, changed: result?.changed, added: result?.added, removed: result?.removed },
+      });
+      setChatHistory(prev => [...prev, { question, answer: res.data.answer }]);
+      setQuestion('');
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        setChatError(err.response?.data?.error || err.message || 'Failed to get answer');
+      } else if (err instanceof Error) {
+        setChatError(err.message);
+      } else {
+        setChatError('Failed to get answer');
+      }
+    } finally {
+      setChatLoading(false);
+    }
+  };
+
+  // Reset chat when comparison is reset
+  useEffect(() => {
+    setChatHistory([]);
+    setQuestion('');
+    setChatError(null);
+  }, [resetKey]);
 
   // Reset shouldRefetch after compare is done
   useEffect(() => {
@@ -151,34 +188,80 @@ export default function Home() {
                 )}
               </div>
 
-              {/* RIGHT: Insights */}
-              <div className="w-full lg:w-2/5">
-                <div className=" overflow-y-auto pr-4">
-                  <InsightChat
-                    summary={result.summary}
-                    changed={result.changed}
-                    added={result.added}
-                    removed={result.removed}
-                    shouldRefetch={shouldRefetchInsights}
-                    setInsightHtml={setInsightHtml}
-                  />
+              {/* RIGHT: Insights and Chat */}
+              <div className="w-full lg:w-2/5 space-y-6">
+                {/* AI Insights Section */}
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+                  <div className="px-4 py-3 border-b border-gray-100">
+                    <h3 className="font-semibold text-gray-800">📊 AI Insights</h3>
+                  </div>
+                  <div className="p-4 max-h-80 overflow-y-auto">
+                    <InsightChat
+                      summary={result.summary}
+                      changed={result.changed}
+                      added={result.added}
+                      removed={result.removed}
+                      shouldRefetch={shouldRefetchInsights}
+                      setInsightHtml={setInsightHtml}
+                    />
+                  </div>
+                </div>
+
+                {/* Interactive Chat Section */}
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+                  <div className="px-4 py-3 border-b border-gray-100">
+                    <h3 className="font-semibold text-gray-800">💬 Ask AI About This Data</h3>
+                  </div>
+                  
+                  {/* Chat History */}
+                  <div className="p-4 max-h-80 overflow-y-auto space-y-4">
+                    {chatHistory.length === 0 && (
+                      <p className="text-gray-400 text-center italic text-sm">Ask anything about price changes or insights...</p>
+                    )}
+                    {chatHistory.map((msg, idx) => (
+                      <div key={idx} className="space-y-2">
+                        <div className="text-blue-700 font-medium text-sm">You:</div>
+                        <div className="text-gray-800 text-sm mb-2">{msg.question}</div>
+                        <div className="bg-gray-50 text-gray-700 p-3 rounded-md border border-gray-100">
+                          <span className="font-semibold text-sm">AI:</span> 
+                          <span className="text-sm ml-1">{msg.answer}</span>
+                        </div>
+                      </div>
+                    ))}
+                    {chatError && (
+                      <div className="text-red-600 text-sm bg-red-50 p-3 rounded-md border border-red-200">
+                        {chatError}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Chat Input */}
+                  <div className="p-4 border-t border-gray-100">
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        className="flex-1 border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                        placeholder="Type your question..."
+                        value={question}
+                        onChange={e => setQuestion(e.target.value)}
+                        onKeyDown={e => { if (e.key === 'Enter') handleAsk(); }}
+                        disabled={chatLoading}
+                      />
+                      <button
+                        className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition disabled:opacity-50 disabled:cursor-not-allowed"
+                        onClick={handleAsk}
+                        disabled={chatLoading || !question.trim()}
+                      >
+                        {chatLoading ? '...' : 'Ask'}
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           )}
         </div>
       </div>
-      {/* Floating Chat overlay */}
-      {result && (
-        <FloatingChat
-          summary={result.summary}
-          changed={result.changed}
-          added={result.added}
-          removed={result.removed}
-          resetKey={resetKey}
-          insightHtml={insightHtml}
-        />
-      )}
     </div>
   );
 }
